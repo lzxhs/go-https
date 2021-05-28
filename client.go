@@ -10,7 +10,7 @@ import (
 
 func main() {
 	pool := x509.NewCertPool()
-	caCertPath := "root.crt"
+	caCertPath := "./certs/ca.crt"
 
 	caCrt, err := ioutil.ReadFile(caCertPath)
 	if err != nil {
@@ -19,7 +19,7 @@ func main() {
 	}
 	pool.AppendCertsFromPEM(caCrt)
 
-	cliCrt, err := tls.LoadX509KeyPair("client.crt", "client.key")
+	cliCrt, err := tls.LoadX509KeyPair("./certs/client.crt", "./certs/client.key")
 	if err != nil {
 		log.Fatal("LoadX509KeyPair err:", err)
 		return
@@ -32,7 +32,7 @@ func main() {
 		},
 	}
 	client := &http.Client{Transport: tr}
-	resp, err := client.Get("https://localhost:8080")
+	resp, err := client.Get("https://localhost:8090")
 	if err != nil {
 		log.Fatal("client error:", err)
 		return

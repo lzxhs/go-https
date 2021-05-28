@@ -18,7 +18,7 @@ func (*httpsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	pool := x509.NewCertPool()
-	caCertPath := "root.crt"
+	caCertPath := "./certs/ca.crt"
 
 	caCrt, err := ioutil.ReadFile(caCertPath)
 	if err != nil {
@@ -28,7 +28,7 @@ func main() {
 	pool.AppendCertsFromPEM(caCrt)
 
 	s := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":8090",
 		Handler: &httpsHandler{},
 		TLSConfig: &tls.Config{
 			ClientCAs:  pool,
@@ -36,7 +36,7 @@ func main() {
 		},
 	}
 
-	if err = s.ListenAndServeTLS("server.crt", "server.key"); err != nil {
+	if err = s.ListenAndServeTLS("./certs/server.crt", "./certs/server.key"); err != nil {
 		log.Fatal("ListenAndServeTLS err:", err)
 	}
 }
